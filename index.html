@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AJAX Navigation</title>
+        <meta charset="utf-8">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+        <style>
+            @media (min-width: 768px) {
+                .container {
+                    max-width: 730px;
+                }
+            }
+            .header {
+                margin-top: 30px;
+                border-bottom: 1px solid #EEE;
+            }
+            .header h2 {
+                margin-top: 0;
+                line-height: 40px;
+            }
+            #stage {
+                padding: 15px;
+            }
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		
+		<!-- jQuery ScrollTo Plugin -->
+		<script src="//balupton.github.io/jquery-scrollto/lib/jquery-scrollto.js"></script>
+
+		<!-- History.js -->
+		<script src="//browserstate.github.io/history.js/scripts/bundled/html4+html5/jquery.history.js"></script>
+
+		<!-- Ajaxify -->
+		<!--<script src="//rawgithub.com/browserstate/ajaxify/master/ajaxify-html5.js"></script>-->
+        <script>
+            function stageContent(content) {
+                $("#stage").html(content);
+            }
+            
+            
+            function evaluatePath(path) {
+                // Clean up the endpoint
+                var request = path.split("/").pop();
+				var title = "";
+				$("li").removeClass("active");
+				
+				if(request) {
+					$("a[href="+request+"]").parent("li").addClass("active");
+				} else {
+					$('a:contains("Home")').parent("li").addClass("active");
+				}
+				
+				console.dir(request);
+                
+                // Request the content
+                if (request == "about") {
+                    $.get("about.html", stageContent);
+					title = "About";
+                }
+                else if (request == "contact") {
+                    $.get("contact.html", stageContent);
+					title = "Contact"
+                }
+                else {
+                    $.get("home.html", stageContent);
+					title = "AJAX Navigation";
+                }
+				
+				// Update title
+				document.title = title;
+            }
+			
+            $(function(){
+                // Evaluate path to start
+                evaluatePath(location.pathname);
+                
+                // When a link is clicked...
+                $("nav[role=navigation] a").click(function(e) {
+                    // Don't follow its href
+                    e.preventDefault();
+					  
+                    // Instead remember its href
+                    var request = $(this).attr("href");
+                    
+                    // And add it to the browser's history
+                    history.pushState(null, null, request);
+                    
+                    // Then evaluate it
+                    evaluatePath(request);
+                    
+                });
+                
+                
+                // If the back button is pressed...
+                $(window).on("popstate", function() {
+                    evaluatePath(location.pathname);
+                });
+                
+                
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header clearfix">
+                <nav role="navigation">
+                    <ul class="nav nav-pills pull-right">
+                        <li><a href="./">Home</a></li>
+                        <li><a href="about">About</a></li>
+                        <li><a href="contact">Contact</a></li>
+                    </ul>
+                </nav>
+                <h2 class="text-muted">AJAX Navigation</h2>
+            </div>
+            <div id="stage"></div>
+        </div>
+    </body>
+</html>
