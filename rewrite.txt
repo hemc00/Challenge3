@@ -1,0 +1,6 @@
+The rewrite rule I applied to the url to allow users to navigate to the ajax call of about/contact tabs directly
+
+<Directory /home/link/zelda-21x2lnn0.cloudapp.net/public_html/challenge3/>
+	RewriteEngine On
+	RewriteRule "^([a-z]+)$" "index.html" [NC]
+</Directory>
