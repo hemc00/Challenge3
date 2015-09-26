@@ -46,13 +46,12 @@
 				var title = "";
 				$("li").removeClass("active");
 				
+				// make respective li active
 				if(request) {
 					$("a[href="+request+"]").parent("li").addClass("active");
 				} else {
 					$('a:contains("Home")').parent("li").addClass("active");
 				}
-				
-				console.dir(request);
                 
                 // Request the content
                 if (request == "about") {
